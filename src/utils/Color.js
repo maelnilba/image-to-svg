@@ -57,7 +57,7 @@ class Color {
 
   increment() {
     if (this.c < 16777216) {
-      this.c = this.c + 1;
+      this.c = this.c + 2;
     }
   }
 

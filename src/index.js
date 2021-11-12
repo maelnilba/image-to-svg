@@ -12,9 +12,8 @@ const images = require("images");
 const { Color, deltaE } = require("./utils/Color");
 
 const TransformToSVG = async (path, delta, color) => {
-  await Jimp.read(path, (err, image) => {
-    if (err) throw console.error(err);
-
+  try {
+    const image = await Jimp.read(path);
     const barprogress = new cliProgress.SingleBar(
       {},
       cliProgress.Presets.shades_classic
@@ -62,14 +61,16 @@ const TransformToSVG = async (path, delta, color) => {
       svgData.join("\n") +
       SvgExporter.getSvgNodeClose();
     let outpath = delta
-      ? path.substring(1, path.length).split(".")[0]
+      ? path.substring(3, path.length).split(".")[0]
       : path.split(".")[0];
     writeFileSync(`./output/${outpath}.svg`, svg);
     if (delta) {
       unlinkSync(path);
     }
     barprogress.stop();
-  });
+  } catch (error) {
+    throw "path doesn't exist";
+  }
 };
 
 const getBackgroundColor = async (path) => {
